@@ -15,8 +15,30 @@ export type AppOptions = {
   runTimeoutMs?: number;
 };
 
+const ALLOWED_HOSTS = new Set(["localhost", "127.0.0.1", "::1"]);
+
+/** Extracts the hostname from a Host header, stripping the port and IPv6 brackets. Null if missing/malformed. */
+function extractHostname(hostHeader: string | undefined): string | null {
+  if (!hostHeader) return null;
+  if (hostHeader.startsWith("[")) {
+    const end = hostHeader.indexOf("]");
+    return end === -1 ? null : hostHeader.slice(1, end);
+  }
+  const colon = hostHeader.lastIndexOf(":");
+  return colon === -1 ? hostHeader : hostHeader.slice(0, colon);
+}
+
 export function buildApp(opts: AppOptions): FastifyInstance {
   const app = Fastify({ logger: false, bodyLimit: 1024 * 1024 });
+
+  // The API compiles and runs arbitrary code; only answer requests addressed to this machine
+  // (guards against DNS rebinding attacks from a page in the browser).
+  app.addHook("onRequest", async (req, reply) => {
+    const hostname = extractHostname(req.headers.host);
+    if (!hostname || !ALLOWED_HOSTS.has(hostname)) {
+      return reply.code(403).send({ error: "Forbidden host" });
+    }
+  });
 
   app.get("/api/problems", async (): Promise<{ problems: ProblemSummary[] }> => {
     const entries = await listProblems(opts.problemsDir);

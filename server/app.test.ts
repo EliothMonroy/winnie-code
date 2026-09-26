@@ -10,6 +10,21 @@ afterAll(async () => {
   await app.close();
 });
 
+describe("Host header guard", () => {
+  it("rejects a non-local Host header", async () => {
+    const res = await app.inject({ method: "GET", url: "/api/problems", headers: { host: "evil.example:5174" } });
+    expect(res.statusCode).toBe(403);
+    expect(res.json()).toEqual({ error: "Forbidden host" });
+  });
+
+  it("allows localhost, 127.0.0.1 and ::1", async () => {
+    for (const host of ["localhost:5174", "127.0.0.1:5174", "[::1]:5174"]) {
+      const res = await app.inject({ method: "GET", url: "/api/problems", headers: { host } });
+      expect(res.statusCode, host).toBe(200);
+    }
+  });
+});
+
 describe("GET /api/problems", () => {
   it("lists valid and invalid problems", async () => {
     const res = await app.inject({ method: "GET", url: "/api/problems" });
