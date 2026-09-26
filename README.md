@@ -9,7 +9,7 @@ A local online judge for practicing LeetCode-style interview problems in **Kotli
 - Light and dark themes, and a responsive layout (split panes on desktop, tabs on mobile)
 - `ListNode` / `TreeNode` problems use LeetCode's notation (`[1,2,null,3]`)
 
-There are no bundled problems. Paste a problem into a Claude Code session in this repo and ask Claude to add it; see `CLAUDE.md` for the exact format.
+There are no bundled problems. Paste a problem into a Claude Code session in this repo and ask Claude to add it; see `AGENTS.md` for the exact format.
 
 ## Requirements
 
