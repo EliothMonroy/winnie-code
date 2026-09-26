@@ -1,4 +1,5 @@
 import { useEffect, useImperativeHandle, useRef, type Ref } from "react";
+import { autocompletion } from "@codemirror/autocomplete";
 import { basicSetup } from "codemirror";
 import { indentWithTab } from "@codemirror/commands";
 import { indentUnit, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
@@ -73,6 +74,7 @@ export function Editor({ initialValue, dark, diagnostics, onChange, onRun, ref }
             ]),
           ),
           basicSetup,
+          autocompletion({ activateOnTyping: false }),
           keymap.of([indentWithTab]),
           indentUnit.of("    "),
           EditorState.tabSize.of(4),
