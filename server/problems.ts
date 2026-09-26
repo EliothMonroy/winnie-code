@@ -81,7 +81,12 @@ export function validateProblem(slug: string, raw: unknown, description: string)
     if (input.length !== params.length) {
       throw new Error(`tests[${i}].input has ${input.length} values but the method has ${params.length} params`);
     }
-    return { input: input as string[], expected: asString(test.expected, `tests[${i}].expected`) };
+    (input as string[]).forEach((value, j) => {
+      if (!value.trim()) throw new Error(`tests[${i}].input[${j}] must not be empty`);
+    });
+    const expected = asString(test.expected, `tests[${i}].expected`);
+    if (!expected.trim()) throw new Error(`tests[${i}].expected must not be empty`);
+    return { input: input as string[], expected };
   });
 
   return { slug, title, difficulty: difficulty as Difficulty, description, method: { name, params, returns }, tests };

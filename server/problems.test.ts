@@ -58,6 +58,10 @@ describe("validateProblem", () => {
     ["input count mismatch", withChanges((p) => (p.tests[0].input = ["[1]"])), /tests\[0\].input has 1 values but the method has 2 params/],
     ["non-string input", withChanges((p) => (p.tests[0].input = [[1], "9"])), /tests\[0\].input must be an array of strings/],
     ["missing expected", withChanges((p) => delete p.tests[0].expected), /tests\[0\].expected must be a string/],
+    ["empty input literal", withChanges((p) => (p.tests[0].input[0] = "")), /tests\[0\]\.input\[0\] must not be empty/],
+    ["whitespace-only input literal", withChanges((p) => (p.tests[0].input[1] = "  ")), /tests\[0\]\.input\[1\] must not be empty/],
+    ["empty expected literal", withChanges((p) => (p.tests[0].expected = "")), /tests\[0\]\.expected must not be empty/],
+    ["whitespace-only expected literal", withChanges((p) => (p.tests[0].expected = "   ")), /tests\[0\]\.expected must not be empty/],
   ])("rejects %s", (_name, raw, message) => {
     expect(() => validateProblem("two-sum", raw, "")).toThrow(message);
   });
