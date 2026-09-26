@@ -1,0 +1,7 @@
+node_modules/
+web/dist/
+.cache/
+.DS_Store
+*.log
+.claude/worktrees/
+.superpowers/
