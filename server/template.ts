@@ -1,6 +1,24 @@
 import type { Method } from "./problems";
 import { formatType, mentionsNode } from "./types";
 
+/** Kotlin hard keywords: identifiers that must be backtick-quoted to be used as names. */
+const HARD_KEYWORDS = new Set([
+  "as", "break", "class", "continue", "do", "else", "false", "for", "fun", "if", "in", "interface", "is", "null",
+  "object", "package", "return", "super", "this", "throw", "true", "try", "typealias", "typeof", "val", "var",
+  "when", "while",
+]);
+
+/** Wraps a name in backticks if it is a Kotlin hard keyword (e.g. a `val` param), otherwise returns it unchanged. */
+function quoteIfKeyword(name: string): string {
+  return HARD_KEYWORDS.has(name) ? `\`${name}\`` : name;
+}
+
+/** Formats a method signature LeetCode-style, e.g. `fun removeElement(nums: IntArray, \`val\`: Int): Int`. */
+export function formatSignature(method: Method): string {
+  const params = method.params.map((p) => `${quoteIfKeyword(p.name)}: ${formatType(p.type)}`).join(", ");
+  return `fun ${quoteIfKeyword(method.name)}(${params}): ${formatType(method.returns)}`;
+}
+
 const LIST_NODE_DOC = [
   "/**",
   " * Example:",
@@ -33,10 +51,9 @@ export function generateTemplate(method: Method): string {
   if (types.some((t) => mentionsNode(t, "ListNode"))) docs.push(LIST_NODE_DOC);
   if (types.some((t) => mentionsNode(t, "TreeNode"))) docs.push(TREE_NODE_DOC);
 
-  const params = method.params.map((p) => `${p.name}: ${formatType(p.type)}`).join(", ");
   const body = [
     "class Solution {",
-    `    fun ${method.name}(${params}): ${formatType(method.returns)} {`,
+    `    ${formatSignature(method)} {`,
     "        ",
     "    }",
     "}",

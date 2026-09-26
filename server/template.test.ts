@@ -35,4 +35,21 @@ describe("generateTemplate", () => {
     expect(text).toContain(" * Definition for a binary tree node.");
     expect(text.indexOf("ListNode(5)")).toBeLessThan(text.indexOf("TreeNode(5)"));
   });
+
+  it("includes only the tree doc block for a TreeNode-only signature", () => {
+    const text = generateTemplate(method("invertTree", [["root", "TreeNode?"]], "TreeNode?"));
+    expect(text).toContain(" * Definition for a binary tree node.");
+    expect(text).not.toContain("singly-linked list");
+    expect(text).not.toContain("ListNode(5)");
+  });
+
+  it("backtick-quotes a param named `val`, a Kotlin hard keyword", () => {
+    const text = generateTemplate(method("removeElement", [["nums", "IntArray"], ["val", "Int"]], "Int"));
+    expect(text).toContain("fun removeElement(nums: IntArray, `val`: Int): Int {");
+  });
+
+  it("leaves a normal param name unchanged", () => {
+    const text = generateTemplate(method("twoSum", [["nums", "IntArray"], ["target", "Int"]], "IntArray"));
+    expect(text).toContain("fun twoSum(nums: IntArray, target: Int): IntArray {");
+  });
 });

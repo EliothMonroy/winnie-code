@@ -4,6 +4,7 @@ import { loadProblem, type Problem } from "./problems";
 import { checkProblemLiterals, runSolution } from "./runner";
 import { FIXTURE_PROBLEMS, getTestToolchain } from "./test-helpers";
 import type { Toolchain } from "./toolchain";
+import { parseType } from "./types";
 
 let tc: Toolchain;
 beforeAll(async () => {
@@ -153,6 +154,37 @@ describe.concurrent("runSolution", () => {
     const code = "class Solution { fun firstChars(words: Array<String>): CharArray = words.map { it[0] }.toCharArray() }";
     const res = expectRan(await runSolution(tc, await fixture("first-chars"), code));
     expect(res.passed).toBe(1);
+  });
+
+  it("compiles and runs a solution whose param is a Kotlin hard keyword (val), matching the generated template's style", async () => {
+    const problem: Problem = {
+      slug: "count-value",
+      title: "Count Value",
+      difficulty: "Easy",
+      description: "",
+      method: {
+        name: "countValue",
+        params: [
+          { name: "nums", type: parseType("IntArray") },
+          { name: "val", type: parseType("Int") },
+        ],
+        returns: parseType("Int"),
+      },
+      tests: [{ input: ["[1,2,2]", "2"], expected: "2" }],
+    };
+    const code = "class Solution { fun countValue(nums: IntArray, `val`: Int): Int = nums.count { it == `val` } }";
+    const res = expectRan(await runSolution(tc, problem, code));
+    expect(res.passed).toBe(1);
+    expect(res.total).toBe(1);
+  });
+
+  it("prepends a friendly hint when the Solution signature does not match the problem's method", async () => {
+    const code = "class Solution { fun total(nums: IntArray): Int = nums.sum() }";
+    const res = await runSolution(tc, await fixture("sum-array"), code);
+    expect(res.status).toBe("compile_error");
+    if (res.status !== "compile_error") return;
+    expect(res.diagnostics).toEqual([]);
+    expect(res.raw.startsWith("Your Solution class must keep the method signature: fun sum(nums: IntArray): Int")).toBe(true);
   });
 });
 

@@ -8,6 +8,7 @@ import { encodeCases, generateMain, type HarnessMode } from "./harness";
 import { buildCaseResults, parseHarnessOutput, type Ending } from "./output";
 import type { Problem } from "./problems";
 import { runProcess, type ProcResult } from "./proc";
+import { formatSignature } from "./template";
 import type { Toolchain } from "./toolchain";
 
 export const DEFAULT_RUN_TIMEOUT_MS = 10_000;
@@ -79,7 +80,12 @@ export async function runSolution(
   const started = Date.now();
   const execution = await compileAndExecute(tc, problem, "run", code, timeoutMs);
   if (execution.kind === "compile_error") {
-    return { status: "compile_error", diagnostics: parseDiagnostics(execution.raw), raw: execution.raw };
+    const diagnostics = parseDiagnostics(execution.raw);
+    let raw = execution.raw;
+    if (diagnostics.length === 0 && parseDiagnostics(execution.raw, "Main.kt").length > 0) {
+      raw = `Your Solution class must keep the method signature: ${formatSignature(problem.method)}\n${raw}`;
+    }
+    return { status: "compile_error", diagnostics, raw };
   }
   const cases = buildCaseResults(problem, parseHarnessOutput(execution.stdout, execution.token), execution.ending);
   return {
