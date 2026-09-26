@@ -14,6 +14,10 @@ object WinnieRunner {
     private const val CAPTURE_LIMIT = 64 * 1024
     private const val STACK_SIZE = 256L * 1024 * 1024
 
+    /** Set from the worker's uncaught-exception handler if it dies outside the per-case try (e.g. an OOM). */
+    @Volatile
+    private var failed = false
+
     fun run(args: Array<String>, normalizeExpected: (String) -> String, invoke: (List<String>) -> String) {
         val decoder = Base64.getDecoder()
         val cases = File(args[0]).readLines().filter { it.isNotBlank() }.map { line ->
@@ -61,9 +65,13 @@ object WinnieRunner {
                 realOut.flush()
             }
         }, "winnie-main", STACK_SIZE)
+        worker.setUncaughtExceptionHandler { _, t ->
+            failed = true
+            t.printStackTrace()
+        }
         worker.start()
         worker.join()
-        exitProcess(0)
+        exitProcess(if (failed) 1 else 0)
     }
 
     private fun b64(s: String): String = Base64.getEncoder().encodeToString(s.toByteArray(Charsets.UTF_8))

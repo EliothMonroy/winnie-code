@@ -15,7 +15,19 @@ export type ProcOptions = { cwd: string; timeoutMs: number; maxOutputBytes?: num
 export function runProcess(command: string, args: string[], opts: ProcOptions): Promise<ProcResult> {
   const maxOutputBytes = opts.maxOutputBytes ?? 32 * 1024 * 1024;
   return new Promise((resolve, reject) => {
-    const child = spawn(command, args, { cwd: opts.cwd, stdio: ["ignore", "pipe", "pipe"] });
+    // detached: true makes the child its own process-group leader, so -pid targets the whole
+    // group below. Needed because kotlinc (Homebrew's bash wrapper) execs java as a child
+    // without `exec`, and killing just the wrapper leaves the JVM orphaned holding the pipes.
+    const child = spawn(command, args, { cwd: opts.cwd, stdio: ["ignore", "pipe", "pipe"], detached: true });
+
+    const killGroup = () => {
+      try {
+        process.kill(-child.pid!, "SIGKILL");
+      } catch {
+        // The group may already be gone.
+      }
+    };
+
     const stdout: Buffer[] = [];
     const stderr: Buffer[] = [];
     let size = 0;
@@ -27,7 +39,7 @@ export function runProcess(command: string, args: string[], opts: ProcOptions): 
       if (size > maxOutputBytes) {
         if (!outputLimitExceeded) {
           outputLimitExceeded = true;
-          child.kill("SIGKILL");
+          killGroup();
         }
         return;
       }
@@ -38,7 +50,7 @@ export function runProcess(command: string, args: string[], opts: ProcOptions): 
 
     const timer = setTimeout(() => {
       timedOut = true;
-      child.kill("SIGKILL");
+      killGroup();
     }, opts.timeoutMs);
 
     child.on("error", (err) => {
