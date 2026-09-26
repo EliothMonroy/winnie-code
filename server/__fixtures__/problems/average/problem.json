@@ -1,0 +1,9 @@
+{
+  "title": "Average",
+  "difficulty": "Easy",
+  "method": { "name": "average", "params": [{ "name": "nums", "type": "IntArray" }], "returns": "Double" },
+  "tests": [
+    { "input": ["[1,2]"], "expected": "1.50000" },
+    { "input": ["[4]"], "expected": "4.0" }
+  ]
+}
