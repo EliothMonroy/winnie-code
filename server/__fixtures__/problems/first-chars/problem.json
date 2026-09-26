@@ -1,0 +1,8 @@
+{
+  "title": "First Characters",
+  "difficulty": "Hard",
+  "method": { "name": "firstChars", "params": [{ "name": "words", "type": "Array<String>" }], "returns": "CharArray" },
+  "tests": [
+    { "input": ["[\"ab\",\"cd\"]"], "expected": "[\"a\",\"c\"]" }
+  ]
+}

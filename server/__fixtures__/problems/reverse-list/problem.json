@@ -1,0 +1,10 @@
+{
+  "title": "Reverse Linked List",
+  "difficulty": "Easy",
+  "method": { "name": "reverseList", "params": [{ "name": "head", "type": "ListNode?" }], "returns": "ListNode?" },
+  "tests": [
+    { "input": ["[1,2,3,4,5]"], "expected": "[5,4,3,2,1]" },
+    { "input": ["[1,2]"], "expected": "[2,1]" },
+    { "input": ["[]"], "expected": "[]" }
+  ]
+}

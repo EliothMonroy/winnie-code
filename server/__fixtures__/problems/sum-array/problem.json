@@ -1,0 +1,10 @@
+{
+  "title": "Sum Array",
+  "difficulty": "Easy",
+  "method": { "name": "sum", "params": [{ "name": "nums", "type": "IntArray" }], "returns": "Int" },
+  "tests": [
+    { "input": ["[1,2,3]"], "expected": "6" },
+    { "input": ["[]"], "expected": "0" },
+    { "input": ["[-5,5]"], "expected": "0" }
+  ]
+}

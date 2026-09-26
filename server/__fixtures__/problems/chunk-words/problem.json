@@ -1,0 +1,13 @@
+{
+  "title": "Chunk Words",
+  "difficulty": "Medium",
+  "method": {
+    "name": "chunk",
+    "params": [{ "name": "words", "type": "List<String>" }, { "name": "size", "type": "Int" }],
+    "returns": "List<List<String>>"
+  },
+  "tests": [
+    { "input": ["[\"a\",\"b\\\"q\",\"c\"]", "2"], "expected": "[[\"a\",\"b\\\"q\"],[\"c\"]]" },
+    { "input": ["[]", "3"], "expected": "[]" }
+  ]
+}

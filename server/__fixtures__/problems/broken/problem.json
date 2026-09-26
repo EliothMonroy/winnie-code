@@ -1,0 +1,6 @@
+{
+  "title": "Broken",
+  "difficulty": "Impossible",
+  "method": { "name": "f", "params": [], "returns": "Int" },
+  "tests": [{ "input": [], "expected": "1" }]
+}
