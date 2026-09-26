@@ -55,7 +55,7 @@ export function buildCaseResults(problem: Problem, harness: Map<number, HarnessC
     const h = harness.get(index);
     if (!h) {
       if (ending.kind === "timeout") return { ...base, verdict: "time_limit_exceeded", stdout: "" };
-      const error = ending.kind === "crashed" ? ending.detail : "The program exited before this case finished.";
+      const error = ending.kind === "crashed" ? truncate(ending.detail) : "The program exited before this case finished.";
       return { ...base, verdict: "runtime_error", stdout: "", error };
     }
     if (h.status === "error") {

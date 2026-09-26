@@ -128,4 +128,12 @@ describe("buildCaseResults", () => {
     expect(result.output!.length).toBeLessThan(big.length + 40);
     expect(result.output!.endsWith("… truncated (64 KB limit)")).toBe(true);
   });
+
+  it("truncates crash details for display", () => {
+    const bigDetail = "z".repeat(DISPLAY_LIMIT + 100);
+    const results = buildCaseResults(problem, harness(ok(0, "3", "3")), { kind: "crashed", detail: bigDetail });
+    expect(results[1]).toMatchObject({ verdict: "runtime_error" });
+    expect(results[1].error!.endsWith("… truncated (64 KB limit)")).toBe(true);
+    expect(results[1].error!.length).toBeLessThan(bigDetail.length);
+  });
 });
