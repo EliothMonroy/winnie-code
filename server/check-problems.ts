@@ -1,12 +1,18 @@
 import { CACHE_DIR, problemsDir, SUPPORT_DIR } from "./paths";
 import { listProblems } from "./problems";
 import { checkProblemLiterals } from "./runner";
-import { prepareToolchain } from "./toolchain";
+import { prepareToolchain, type Toolchain } from "./toolchain";
 
 const onlySlug = process.argv[2];
 const dir = problemsDir();
 
-const toolchain = await prepareToolchain({ supportDir: SUPPORT_DIR, cacheDir: CACHE_DIR });
+let toolchain: Toolchain;
+try {
+  toolchain = await prepareToolchain({ supportDir: SUPPORT_DIR, cacheDir: CACHE_DIR });
+} catch (e) {
+  console.error(`✖ ${(e as Error).message}`);
+  process.exit(1);
+}
 const entries = (await listProblems(dir)).filter((e) => !onlySlug || e.slug === onlySlug);
 
 if (entries.length === 0) {

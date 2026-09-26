@@ -13,7 +13,7 @@ There are no bundled problems. Paste a problem into a Claude Code session in thi
 
 ## Requirements
 
-- Node.js 20+
+- Node.js 22.12+
 - Kotlin compiler (`kotlinc`) on `PATH`, e.g. `brew install kotlin`
 - A JDK 17+ (`java` on `PATH`)
 

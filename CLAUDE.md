@@ -45,7 +45,7 @@ Local LeetCode-style judge for Kotlin. The user pastes problems into a Claude se
      - trees are level-order with `null` holes, e.g. `[3,9,20,null,null,15,7]`;
      - an empty list or tree is `[]`.
    - Tests: every example from the statement plus 3–6 extra edge cases (minimum sizes, negatives, duplicates, boundaries from the constraints).
-   - Comparison is exact after normalization. If a problem accepts several valid answers (any order, any valid index pair, etc.), choose test inputs whose answer is unique, or tell the user it cannot be judged exactly. Design problems (e.g. `LRUCache`) are not supported yet.
+   - Comparison is exact after normalization. If a problem accepts several valid answers (any order, any valid index pair, etc.), choose test inputs whose answer is unique, or tell the user it cannot be judged exactly. Design problems (e.g. `LRUCache`) are not supported yet. Problems whose LeetCode signature returns `Unit` / modifies the input in place (e.g. Rotate Image, Sort Colors, Move Zeroes) are also not supported yet - tell the user rather than inventing a non-LeetCode signature that returns a value.
 4. **Verify**:
    - Run `npm run check-problems <slug>`; it must print `✓`.
    - Write a correct reference solution to a scratch file **outside the repo**, and run `npm run try -- <slug> <file>`. Every case must pass. If one fails, fix the expected value (or the solution) until you're confident the tests are right.
