@@ -37,15 +37,15 @@ export function userCompletionSource(context: CompletionContext): CompletionResu
 
 /**
  * Wires up the "only my own names" autocomplete: opens while typing a matching
- * prefix, Tab accepts (only while the popup is open), Ctrl-Space opens it on
- * demand, arrows navigate and Escape closes it.
+ * prefix, Tab or Enter accepts (only while the popup is open), Ctrl-Space opens
+ * it on demand, arrows navigate and Escape closes it.
  *
- * Enter is deliberately left unbound here. `autocompletion()`'s own keymap
- * (which binds Enter to acceptCompletion) is disabled via `defaultKeymap: false` -
- * the option is a single document-wide facet, so this also switches off any other
- * `autocompletion()` call in the extension tree (e.g. inside `basicSetup`). That
- * leaves the editor's ordinary Enter binding (insert a newline) as the only one,
- * so Enter can never accept a completion, in or out of the popup.
+ * `autocompletion()`'s own keymap is disabled via `defaultKeymap: false` (a single
+ * document-wide facet, so this also switches off the one inside `basicSetup`) and
+ * replaced by the bindings below. `acceptCompletion` returns false when no popup is
+ * open, so Tab and Enter fall through to indenting and inserting a newline. Because
+ * the popup hides once the typed word exactly matches a name, Enter after a fully
+ * typed name still inserts a newline.
  */
 export function userCompletions(): Extension {
   return [
@@ -61,6 +61,7 @@ export function userCompletions(): Extension {
         { key: "ArrowDown", run: moveCompletionSelection(true) },
         { key: "ArrowUp", run: moveCompletionSelection(false) },
         { key: "Tab", run: acceptCompletion },
+        { key: "Enter", run: acceptCompletion },
       ]),
     ),
   ];
