@@ -39,6 +39,14 @@ describe.concurrent("runSolution", () => {
     expect(res.cases[0].stdout).toBe("size=3\n");
     expect(res.cases[0].input).toEqual([{ name: "nums", value: "[1,2,3]" }]);
     expect(res.elapsedMs).toBeGreaterThan(0);
+    // Every case's per-case time must be a real, finite number (never NaN/negative), and cases after
+    // the first (which pays for JVM class loading) should be able to report sub-millisecond times with
+    // fractional precision rather than truncating to a misleading "0".
+    for (const c of res.cases) {
+      expect(Number.isFinite(c.elapsedMs)).toBe(true);
+      expect(c.elapsedMs).toBeGreaterThanOrEqual(0);
+    }
+    expect(res.cases.some((c) => c.elapsedMs !== undefined && !Number.isInteger(c.elapsedMs))).toBe(true);
   });
 
   it("reports wrong answers with the actual output", async () => {

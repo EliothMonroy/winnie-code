@@ -3,12 +3,16 @@ import java.io.File
 import java.io.OutputStream
 import java.io.PrintStream
 import java.util.Base64
+import java.util.Locale
 import kotlin.system.exitProcess
 
 /**
  * Runs every test case and prints one tagged line per case on the real stdout:
  *   token|index|status|elapsedMs|b64(output)|b64(normalizedExpected)|b64(capturedStdout)|b64(error)
  * status is "ok" or "error". User println output is captured per case so it never mixes with results.
+ * elapsedMs is a decimal string with microsecond precision (e.g. "0.042" or "1.767"), not an integer:
+ * once the JVM is warmed up, most cases run in well under 1 ms, and integer-ms truncation would
+ * report a misleading "0" for every case after the first (which pays for class loading).
  */
 object WinnieRunner {
     private const val CAPTURE_LIMIT = 64 * 1024
@@ -35,7 +39,7 @@ object WinnieRunner {
                 var output = ""
                 var expected = ""
                 var error = ""
-                var elapsedMs = 0L
+                var elapsedMs = "0"
                 try {
                     expected = normalizeExpected(fields.last())
                 } catch (t: Throwable) {
@@ -54,12 +58,12 @@ object WinnieRunner {
                     } finally {
                         System.setOut(realOut)
                         System.setErr(realErr)
-                        elapsedMs = (System.nanoTime() - start) / 1_000_000
+                        elapsedMs = String.format(Locale.ROOT, "%.3f", (System.nanoTime() - start) / 1_000_000.0)
                     }
                 }
                 captureStream.flush()
                 realOut.println(
-                    listOf(token, index.toString(), status, elapsedMs.toString(), b64(output), b64(expected), b64(capture.text()), b64(error))
+                    listOf(token, index.toString(), status, elapsedMs, b64(output), b64(expected), b64(capture.text()), b64(error))
                         .joinToString("|"),
                 )
                 realOut.flush()

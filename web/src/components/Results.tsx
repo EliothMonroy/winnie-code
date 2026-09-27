@@ -1,5 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
 import type { CaseResult, RunResponse, Verdict } from "../../../shared/api";
+import { formatElapsedMs } from "../format";
 import { CheckIcon, XIcon } from "./Icons";
 
 const VERDICT_LABELS: Record<Verdict, string> = {
@@ -116,7 +117,7 @@ function CaseDetails({ result }: { result: CaseResult }) {
     <div className="case-details" role="tabpanel">
       <div className={`verdict verdict-${result.verdict}`}>
         {VERDICT_LABELS[result.verdict]}
-        {result.elapsedMs !== undefined && <span className="summary-meta"> · {result.elapsedMs} ms</span>}
+        {result.elapsedMs !== undefined && <span className="summary-meta"> · {formatElapsedMs(result.elapsedMs)}</span>}
       </div>
       <Field label="Input">
         {result.input.map((param) => (

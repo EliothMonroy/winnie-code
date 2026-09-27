@@ -6,8 +6,16 @@ import { parseType } from "./types";
 const TOKEN = "tok123";
 const b64 = (s: string) => Buffer.from(s, "utf8").toString("base64");
 
-function line(index: number, status: string, fields: Partial<Record<"output" | "expected" | "stdout" | "error", string>> = {}, token = TOKEN) {
-  return [token, index, status, 7, b64(fields.output ?? ""), b64(fields.expected ?? ""), b64(fields.stdout ?? ""), b64(fields.error ?? "")].join("|");
+function line(
+  index: number,
+  status: string,
+  fields: Partial<Record<"output" | "expected" | "stdout" | "error", string>> = {},
+  token = TOKEN,
+  ms: string | number = 7,
+) {
+  return [token, index, status, ms, b64(fields.output ?? ""), b64(fields.expected ?? ""), b64(fields.stdout ?? ""), b64(fields.error ?? "")].join(
+    "|",
+  );
 }
 
 const problem: Problem = {
@@ -49,6 +57,15 @@ describe("parseHarnessOutput", () => {
     expect(cases.get(1)?.status).toBe("error");
     expect(cases.get(1)?.error).toBe("java.lang.RuntimeException: boom");
     expect(cases.size).toBe(2);
+  });
+
+  it("preserves sub-millisecond precision so fast cases don't all collapse to 0", () => {
+    const out = [line(0, "ok", { output: "3", expected: "3" }, TOKEN, "0.042"), line(1, "ok", { output: "5", expected: "5" }, TOKEN, "1.767")].join(
+      "\n",
+    );
+    const cases = parseHarnessOutput(out, TOKEN);
+    expect(cases.get(0)?.elapsedMs).toBeCloseTo(0.042, 5);
+    expect(cases.get(1)?.elapsedMs).toBeCloseTo(1.767, 5);
   });
 
   it("ignores lines with the wrong token, bad status or wrong shape, and keeps the first line per index", () => {
