@@ -23,7 +23,7 @@
   --medium: #b45309;
   --hard: #dc2626;
   --editor-bg: #ffffff;
-  --editor-active-line: #faf7f0;
+  --editor-active-line: rgba(180, 140, 60, 0.07); /* translucent so the selection layer behind it stays visible */
   --editor-selection: #fce7c2;
   --code-bg: #f4f1ea;
   --focus-ring: 0 0 0 3px rgba(217, 119, 6, 0.35);
@@ -59,7 +59,7 @@
     --medium: #fbbf24;
     --hard: #f87171;
     --editor-bg: #1b1a18;
-    --editor-active-line: #22211e;
+    --editor-active-line: rgba(255, 255, 255, 0.035);
     --editor-selection: #4a3a1c;
     --code-bg: #242320;
     --focus-ring: 0 0 0 3px rgba(245, 158, 11, 0.4);
@@ -91,7 +91,7 @@
   --medium: #fbbf24;
   --hard: #f87171;
   --editor-bg: #1b1a18;
-  --editor-active-line: #22211e;
+  --editor-active-line: rgba(255, 255, 255, 0.035);
   --editor-selection: #4a3a1c;
   --code-bg: #242320;
   --focus-ring: 0 0 0 3px rgba(245, 158, 11, 0.4);
