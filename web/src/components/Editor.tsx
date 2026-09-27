@@ -1,5 +1,4 @@
 import { useEffect, useImperativeHandle, useRef, type Ref } from "react";
-import { autocompletion } from "@codemirror/autocomplete";
 import { basicSetup } from "codemirror";
 import { indentWithTab } from "@codemirror/commands";
 import { indentUnit, StreamLanguage, syntaxHighlighting } from "@codemirror/language";
@@ -8,6 +7,7 @@ import { lintGutter, setDiagnostics, type Diagnostic as CmDiagnostic } from "@co
 import { Compartment, EditorState, Prec, type Extension, type Text } from "@codemirror/state";
 import { oneDarkHighlightStyle } from "@codemirror/theme-one-dark";
 import { EditorView, keymap } from "@codemirror/view";
+import { userCompletions } from "../editor/completions";
 import type { Diagnostic } from "../../../shared/api";
 
 export type EditorHandle = { setValue(code: string): void };
@@ -74,7 +74,7 @@ export function Editor({ initialValue, dark, diagnostics, onChange, onRun, ref }
             ]),
           ),
           basicSetup,
-          autocompletion({ activateOnTyping: false }),
+          userCompletions(),
           keymap.of([indentWithTab]),
           indentUnit.of("    "),
           EditorState.tabSize.of(4),
