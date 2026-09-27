@@ -1,0 +1,24 @@
+{
+  "title": "Remove Element",
+  "difficulty": "Easy",
+  "method": {
+    "name": "removeElement",
+    "params": [
+      { "name": "nums", "type": "IntArray" },
+      { "name": "target", "type": "Int" }
+    ],
+    "returns": "IntArray"
+  },
+  "tests": [
+    { "input": ["[1,2,3,2,4,2]", "2"], "expected": "[1,3,4]" },
+    { "input": ["[5,5,5]", "5"], "expected": "[]" },
+    { "input": ["[1,2,3]", "7"], "expected": "[1,2,3]" },
+    { "input": ["[]", "1"], "expected": "[]" },
+    { "input": ["[7]", "7"], "expected": "[]" },
+    { "input": ["[7]", "3"], "expected": "[7]" },
+    { "input": ["[2,1,2]", "2"], "expected": "[1]" },
+    { "input": ["[3,1,2,1,3]", "3"], "expected": "[1,2,1]" },
+    { "input": ["[-1,0,-1,1]", "-1"], "expected": "[0,1]" },
+    { "input": ["[-2147483648,2147483647,-2147483648]", "-2147483648"], "expected": "[2147483647]" }
+  ]
+}
