@@ -24,7 +24,7 @@ type Props = {
 
 const baseTheme = EditorView.theme({
   "&": { height: "100%", fontSize: "13.5px", backgroundColor: "var(--editor-bg)", color: "var(--text)" },
-  ".cm-scroller": { fontFamily: "var(--font-mono)", lineHeight: "1.6" },
+  ".cm-scroller": { fontFamily: "var(--font-mono)", fontVariantLigatures: "none", lineHeight: "1.6" },
   ".cm-content": { caretColor: "var(--accent)", padding: "10px 0" },
   ".cm-gutters": { backgroundColor: "var(--editor-bg)", color: "var(--text-faint)", border: "none" },
   ".cm-activeLine": { backgroundColor: "var(--editor-active-line)" },
