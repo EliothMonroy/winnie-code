@@ -1,0 +1,19 @@
+{
+  "title": "Reverse String",
+  "difficulty": "Easy",
+  "method": {
+    "name": "reverseString",
+    "params": [{ "name": "s", "type": "String" }],
+    "returns": "String"
+  },
+  "tests": [
+    { "input": ["\"hello\""], "expected": "\"olleh\"" },
+    { "input": ["\"AlgoMonster\""], "expected": "\"retsnoMoglA\"" },
+    { "input": ["\"a\""], "expected": "\"a\"" },
+    { "input": ["\"\""], "expected": "\"\"" },
+    { "input": ["\"ab\""], "expected": "\"ba\"" },
+    { "input": ["\"racecar\""], "expected": "\"racecar\"" },
+    { "input": ["\"Hello, World!\""], "expected": "\"!dlroW ,olleH\"" },
+    { "input": ["\"a\\\"b\\\\c\""], "expected": "\"c\\\\b\\\"a\"" }
+  ]
+}
