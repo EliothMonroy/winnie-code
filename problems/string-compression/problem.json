@@ -1,0 +1,20 @@
+{
+  "title": "String Compression",
+  "difficulty": "Easy",
+  "method": {
+    "name": "compress",
+    "params": [{ "name": "s", "type": "String" }],
+    "returns": "String"
+  },
+  "tests": [
+    { "input": ["\"aaabbc\""], "expected": "\"a3b2c1\"" },
+    { "input": ["\"aabbccdd\""], "expected": "\"a2b2c2d2\"" },
+    { "input": ["\"abc\""], "expected": "\"a1b1c1\"" },
+    { "input": ["\"\""], "expected": "\"\"" },
+    { "input": ["\"z\""], "expected": "\"z1\"" },
+    { "input": ["\"zzzzz\""], "expected": "\"z5\"" },
+    { "input": ["\"aaaaaaaaaaaa\""], "expected": "\"a12\"" },
+    { "input": ["\"aabaa\""], "expected": "\"a2b1a2\"" },
+    { "input": ["\"aAa\""], "expected": "\"a1A1a1\"" }
+  ]
+}
