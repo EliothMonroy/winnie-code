@@ -85,7 +85,7 @@ object WinnieIO {
         var cur = head
         while (cur != null) {
             if (!seen.add(cur)) throw IllegalStateException("The returned linked list contains a cycle")
-            out.add(cur.`val`.toString())
+            out.add(cur.value.toString())
             cur = cur.next
         }
         return encSeq(out)
@@ -104,7 +104,7 @@ object WinnieIO {
                 continue
             }
             if (!seen.add(node)) throw IllegalStateException("The returned tree contains a cycle")
-            out.add(node.`val`.toString())
+            out.add(node.value.toString())
             queue.add(node.left)
             queue.add(node.right)
         }

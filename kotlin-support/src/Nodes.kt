@@ -1,10 +1,10 @@
-/** Singly-linked list node, identical to LeetCode's Kotlin definition. */
-class ListNode(var `val`: Int) {
+/** Singly-linked list node. Like LeetCode's, except the field is `value` instead of the keyword `val`. */
+class ListNode(var value: Int) {
     var next: ListNode? = null
 }
 
-/** Binary tree node, identical to LeetCode's Kotlin definition. */
-class TreeNode(var `val`: Int) {
+/** Binary tree node. Like LeetCode's, except the field is `value` instead of the keyword `val`. */
+class TreeNode(var value: Int) {
     var left: TreeNode? = null
     var right: TreeNode? = null
 }

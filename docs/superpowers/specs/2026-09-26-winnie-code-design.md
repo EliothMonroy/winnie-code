@@ -114,11 +114,11 @@ Literal notation follows LeetCode:
 - `TreeNode?` is level-order with `null` holes, e.g. `[3,9,20,null,null,15,7]`, and `[]`
   means `null`.
 
-`ListNode` and `TreeNode` are defined in `kotlin-support` using LeetCode's shape:
+`ListNode` and `TreeNode` are defined in `kotlin-support` using LeetCode's shape, except that the value field is named `value` instead of the Kotlin keyword `val` (changed 2026-10-04):
 
 ```kotlin
-class ListNode(var `val`: Int) { var next: ListNode? = null }
-class TreeNode(var `val`: Int) { var left: TreeNode? = null; var right: TreeNode? = null }
+class ListNode(var value: Int) { var next: ListNode? = null }
+class TreeNode(var value: Int) { var left: TreeNode? = null; var right: TreeNode? = null }
 ```
 
 ### Adding a problem (workflow)
