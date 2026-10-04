@@ -39,7 +39,7 @@ Local LeetCode-style judge for Kotlin. The user pastes problems into a Claude se
      - scalars: `Int`, `Long`, `Double`, `Boolean`, `Char`, `String`;
      - primitive arrays: `IntArray`, `LongArray`, `DoubleArray`, `BooleanArray`, `CharArray`;
      - `Array<T>` and `List<T>` (nestable);
-     - `ListNode?` and `TreeNode?` (always nullable; they can also appear inside arrays and lists).
+     - `ListNode?` and `TreeNode?` (always nullable; they can also appear inside arrays and lists). Their value field is `value`, not LeetCode's `` `val` ``, so reference solutions must use `node.value`.
    - Literals use LeetCode notation:
      - strings and chars are double-quoted (`"a"`), and inside JSON the quotes are escaped;
      - trees are level-order with `null` holes, e.g. `[3,9,20,null,null,15,7]`;

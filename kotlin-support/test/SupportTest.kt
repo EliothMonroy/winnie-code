@@ -55,7 +55,7 @@ fun main() {
     check("empty tree", WinnieIO.treeNode(lit("[]")), null)
     check("null root", WinnieIO.treeNode(lit("[null]")), null)
     check("null tree encodes as []", WinnieIO.encTreeNode(null), "[]")
-    check("tree structure", WinnieIO.treeNode(lit("[1,null,2]"))?.right?.`val`, 2)
+    check("tree structure", WinnieIO.treeNode(lit("[1,null,2]"))?.right?.value, 2)
     check("tree too many values", errorOf { WinnieIO.treeNode(lit("[1,null,null,2]")) }, "Invalid tree literal: too many values")
 
     // Errors

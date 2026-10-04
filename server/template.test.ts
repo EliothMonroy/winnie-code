@@ -24,7 +24,8 @@ describe("generateTemplate", () => {
   it("prefixes the ListNode definition comment when ListNode is used", () => {
     const text = generateTemplate(method("reverseList", [["head", "ListNode?"]], "ListNode?"));
     expect(text.startsWith("/**\n * Example:\n * var li = ListNode(5)")).toBe(true);
-    expect(text).toContain(" * class ListNode(var `val`: Int) {");
+    expect(text).toContain(" * class ListNode(var value: Int) {");
+    expect(text).toContain(" * var v = li.value");
     expect(text).not.toContain("TreeNode");
     expect(text).toContain("fun reverseList(head: ListNode?): ListNode? {");
   });
@@ -39,6 +40,8 @@ describe("generateTemplate", () => {
   it("includes only the tree doc block for a TreeNode-only signature", () => {
     const text = generateTemplate(method("invertTree", [["root", "TreeNode?"]], "TreeNode?"));
     expect(text).toContain(" * Definition for a binary tree node.");
+    expect(text).toContain(" * class TreeNode(var value: Int) {");
+    expect(text).toContain(" * var v = ti.value");
     expect(text).not.toContain("singly-linked list");
     expect(text).not.toContain("ListNode(5)");
   });

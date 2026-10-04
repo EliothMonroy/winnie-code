@@ -145,6 +145,38 @@ describe.concurrent("runSolution", () => {
     expect(res.passed).toBe(3);
   });
 
+  it("exposes node values as `.value` on ListNode and TreeNode", async () => {
+    const listCode = [
+      "class Solution {",
+      "    fun reverseList(head: ListNode?): ListNode? {",
+      "        var result: ListNode? = null",
+      "        var cur = head",
+      "        while (cur != null) {",
+      "            val node = ListNode(cur.value)",
+      "            node.next = result",
+      "            result = node",
+      "            cur = cur.next",
+      "        }",
+      "        return result",
+      "    }",
+      "}",
+    ].join("\n");
+    expect(expectRan(await runSolution(tc, await fixture("reverse-list"), listCode)).passed).toBe(3);
+
+    const treeCode = [
+      "class Solution {",
+      "    fun invertTree(root: TreeNode?): TreeNode? {",
+      "        if (root == null) return null",
+      "        val copy = TreeNode(root.value)",
+      "        copy.left = invertTree(root.right)",
+      "        copy.right = invertTree(root.left)",
+      "        return copy",
+      "    }",
+      "}",
+    ].join("\n");
+    expect(expectRan(await runSolution(tc, await fixture("invert-tree"), treeCode)).passed).toBe(3);
+  });
+
   it("handles nested lists with escaped strings", async () => {
     const code = "class Solution { fun chunk(words: List<String>, size: Int): List<List<String>> = words.chunked(size) }";
     const res = expectRan(await runSolution(tc, await fixture("chunk-words"), code));
