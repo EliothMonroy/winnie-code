@@ -1,0 +1,10 @@
+{
+  "title": "Reverse Doubly Linked List",
+  "difficulty": "Easy",
+  "method": { "name": "reverse", "params": [{ "name": "head", "type": "DoublyListNode?" }], "returns": "DoublyListNode?" },
+  "tests": [
+    { "input": ["[1,2,3,4,5]"], "expected": "[5,4,3,2,1]" },
+    { "input": ["[5]"], "expected": "[5]" },
+    { "input": ["[]"], "expected": "[]" }
+  ]
+}

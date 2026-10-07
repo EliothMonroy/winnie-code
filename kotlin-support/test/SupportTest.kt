@@ -47,6 +47,40 @@ fun main() {
     cyclic.next = cyclic
     check("list cycle", errorOf { WinnieIO.encListNode(cyclic) }, "The returned linked list contains a cycle")
 
+    // Doubly linked lists
+    check("doubly list node", WinnieIO.encDoublyListNode(WinnieIO.doublyListNode(lit("[1,2,3]"))), "[1,2,3]")
+    check("empty doubly list node", WinnieIO.doublyListNode(lit("[]")), null)
+    check("null doubly list node encodes as []", WinnieIO.encDoublyListNode(null), "[]")
+    val dHead = WinnieIO.doublyListNode(lit("[1,2,3]"))
+    check("doubly head prev is null", dHead?.prev, null)
+    check("doubly prev wired to previous node", dHead?.next?.prev === dHead, true)
+    check("doubly tail prev value", dHead?.next?.next?.prev?.value, 2)
+    check("doubly tail next is null", dHead?.next?.next?.next, null)
+    val nextOnly = DoublyListNode(5)
+    val nextOnlySecond = DoublyListNode(4)
+    nextOnly.next = nextOnlySecond
+    check(
+        "doubly missing prev",
+        errorOf { WinnieIO.encDoublyListNode(nextOnly) },
+        "Broken doubly linked list: node at position 2 (value 4) must have prev pointing to the node before it (value 5), but its prev is null",
+    )
+    val wrongPrev = WinnieIO.doublyListNode(lit("[5,4,3]"))
+    wrongPrev?.next?.next?.prev = wrongPrev
+    check(
+        "doubly wrong prev",
+        errorOf { WinnieIO.encDoublyListNode(wrongPrev) },
+        "Broken doubly linked list: node at position 3 (value 3) must have prev pointing to the node before it (value 4), but its prev points to a node with value 5",
+    )
+    val notHead = WinnieIO.doublyListNode(lit("[1,2,3]"))?.next
+    check(
+        "doubly head with prev",
+        errorOf { WinnieIO.encDoublyListNode(notHead) },
+        "Broken doubly linked list: the head (value 2) must have prev = null, but its prev points to a node with value 1",
+    )
+    val dCyclic = DoublyListNode(1)
+    dCyclic.next = dCyclic
+    check("doubly list cycle", errorOf { WinnieIO.encDoublyListNode(dCyclic) }, "The returned doubly linked list contains a cycle")
+
     // Trees
     for (t in listOf("[3,9,20,null,null,15,7]", "[1,null,2,3]", "[1]", "[5,4,8,11,null,13,4,7,2,null,null,null,1]")) {
         check("tree $t", tree(t), t)

@@ -177,6 +177,46 @@ describe.concurrent("runSolution", () => {
     expect(expectRan(await runSolution(tc, await fixture("invert-tree"), treeCode)).passed).toBe(3);
   });
 
+  it("handles doubly linked lists and rejects broken prev pointers", async () => {
+    const correct = [
+      "class Solution {",
+      "    fun reverse(head: DoublyListNode?): DoublyListNode? {",
+      "        var newHead: DoublyListNode? = null",
+      "        var cur = head",
+      "        while (cur != null) {",
+      "            val next = cur.next",
+      "            cur.next = cur.prev",
+      "            cur.prev = next",
+      "            newHead = cur",
+      "            cur = next",
+      "        }",
+      "        return newHead",
+      "    }",
+      "}",
+    ].join("\n");
+    expect(expectRan(await runSolution(tc, await fixture("reverse-doubly-list"), correct)).passed).toBe(3);
+
+    // Reverses only the next pointers, like a singly linked list: the values come out right but prev is stale.
+    const nextOnly = [
+      "class Solution {",
+      "    fun reverse(head: DoublyListNode?): DoublyListNode? {",
+      "        var prev: DoublyListNode? = null",
+      "        var cur = head",
+      "        while (cur != null) {",
+      "            val next = cur.next",
+      "            cur.next = prev",
+      "            prev = cur",
+      "            cur = next",
+      "        }",
+      "        return prev",
+      "    }",
+      "}",
+    ].join("\n");
+    const res = expectRan(await runSolution(tc, await fixture("reverse-doubly-list"), nextOnly));
+    expect(res.cases.map((c) => c.verdict)).toEqual(["runtime_error", "accepted", "accepted"]);
+    expect(res.cases[0].error).toContain("Broken doubly linked list: the head (value 5) must have prev = null");
+  });
+
   it("handles nested lists with escaped strings", async () => {
     const code = "class Solution { fun chunk(words: List<String>, size: Int): List<List<String>> = words.chunked(size) }";
     const res = expectRan(await runSolution(tc, await fixture("chunk-words"), code));
@@ -230,7 +270,7 @@ describe.concurrent("runSolution", () => {
 
 describe.concurrent("checkProblemLiterals", () => {
   it("accepts valid fixtures", async () => {
-    for (const slug of ["sum-array", "reverse-list", "invert-tree", "chunk-words", "average", "first-chars"]) {
+    for (const slug of ["sum-array", "reverse-list", "reverse-doubly-list", "invert-tree", "chunk-words", "average", "first-chars"]) {
       expect(await checkProblemLiterals(tc, await fixture(slug)), slug).toEqual([]);
     }
   });

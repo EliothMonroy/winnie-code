@@ -38,6 +38,19 @@ object WinnieIO {
         return dummy.next
     }
 
+    /** Builds a doubly linked list with both `next` and `prev` wired; `[]` is null. */
+    fun doublyListNode(l: WinnieLit): DoublyListNode? {
+        var head: DoublyListNode? = null
+        var tail: DoublyListNode? = null
+        for (item in items(l)) {
+            val node = DoublyListNode(int(item))
+            node.prev = tail
+            if (tail == null) head = node else tail.next = node
+            tail = node
+        }
+        return head
+    }
+
     fun treeNode(l: WinnieLit): TreeNode? {
         val values = items(l)
         if (values.isEmpty() || values[0] is WinnieLit.Null) return null
@@ -86,6 +99,39 @@ object WinnieIO {
         while (cur != null) {
             if (!seen.add(cur)) throw IllegalStateException("The returned linked list contains a cycle")
             out.add(cur.value.toString())
+            cur = cur.next
+        }
+        return encSeq(out)
+    }
+
+    /**
+     * Serializes a doubly linked list by walking `next` from the head, and verifies the `prev`
+     * pointers on the way: the head's must be null and every other node's must point to the node
+     * before it. Otherwise a solution that only rewires `next` would look correct.
+     */
+    fun encDoublyListNode(head: DoublyListNode?): String {
+        if (head == null) return "[]"
+        head.prev?.let {
+            throw IllegalStateException(
+                "Broken doubly linked list: the head (value ${head.value}) must have prev = null, " +
+                    "but its prev points to a node with value ${it.value}",
+            )
+        }
+        val seen = Collections.newSetFromMap(IdentityHashMap<DoublyListNode, Boolean>())
+        val out = ArrayList<String>()
+        var before: DoublyListNode? = null
+        var cur: DoublyListNode? = head
+        while (cur != null) {
+            if (!seen.add(cur)) throw IllegalStateException("The returned doubly linked list contains a cycle")
+            if (before != null && cur.prev !== before) {
+                val actual = cur.prev?.let { "points to a node with value ${it.value}" } ?: "is null"
+                throw IllegalStateException(
+                    "Broken doubly linked list: node at position ${out.size + 1} (value ${cur.value}) must have prev " +
+                        "pointing to the node before it (value ${before.value}), but its prev $actual",
+                )
+            }
+            out.add(cur.value.toString())
+            before = cur
             cur = cur.next
         }
         return encSeq(out)

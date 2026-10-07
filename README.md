@@ -7,7 +7,7 @@ A local online judge for practicing LeetCode-style interview problems in **Kotli
 - Compilation errors are listed with line numbers and underlined in the editor
 - Per-case results: input, expected, your output, `println` output, runtime errors and timeouts
 - Light and dark themes, and a responsive layout (split panes on desktop, tabs on mobile)
-- `ListNode` / `TreeNode` problems use LeetCode's notation (`[1,2,null,3]`)
+- `ListNode` / `DoublyListNode` / `TreeNode` problems use LeetCode's notation (`[1,2,null,3]`); doubly linked answers have their `prev` pointers checked too
 
 There are no bundled problems. Paste a problem into a Claude Code session in this repo and ask Claude to add it; see `AGENTS.md` for the exact format.
 

@@ -1,5 +1,5 @@
 import type { Problem, TestCase } from "./problems";
-import { formatType, primArrayElement, type KType, type ScalarName } from "./types";
+import { formatType, primArrayElement, type KType, type NodeName, type ScalarName } from "./types";
 
 export type HarnessMode = "run" | "check";
 
@@ -23,6 +23,18 @@ const SCALAR_ENCODERS: Record<ScalarName, string> = {
   String: "encStr",
 };
 
+const NODE_DECODERS: Record<NodeName, string> = {
+  ListNode: "listNode",
+  TreeNode: "treeNode",
+  DoublyListNode: "doublyListNode",
+};
+
+const NODE_ENCODERS: Record<NodeName, string> = {
+  ListNode: "encListNode",
+  TreeNode: "encTreeNode",
+  DoublyListNode: "encDoublyListNode",
+};
+
 /** Kotlin expression converting the WinnieLit expression `lit` into a value of type `t`. */
 export function decodeExpr(t: KType, lit: string, depth = 1): string {
   const x = `x${depth}`;
@@ -30,7 +42,7 @@ export function decodeExpr(t: KType, lit: string, depth = 1): string {
     case "scalar":
       return `${IO}.${SCALAR_DECODERS[t.name]}(${lit})`;
     case "node":
-      return t.name === "ListNode" ? `${IO}.listNode(${lit})` : `${IO}.treeNode(${lit})`;
+      return `${IO}.${NODE_DECODERS[t.name]}(${lit})`;
     case "primArray": {
       const element: KType = { kind: "scalar", name: primArrayElement(t.name) };
       return `${IO}.items(${lit}).map { ${x} -> ${decodeExpr(element, x, depth + 1)} }.to${t.name}()`;
@@ -49,7 +61,7 @@ export function encodeExpr(t: KType, value: string, depth = 1): string {
     case "scalar":
       return `${IO}.${SCALAR_ENCODERS[t.name]}(${value})`;
     case "node":
-      return t.name === "ListNode" ? `${IO}.encListNode(${value})` : `${IO}.encTreeNode(${value})`;
+      return `${IO}.${NODE_ENCODERS[t.name]}(${value})`;
     case "primArray": {
       const element: KType = { kind: "scalar", name: primArrayElement(t.name) };
       return `${IO}.encSeq(${value}.map { ${y} -> ${encodeExpr(element, y, depth + 1)} })`;

@@ -1,6 +1,6 @@
 export type ScalarName = "Int" | "Long" | "Double" | "Boolean" | "Char" | "String";
 export type PrimArrayName = "IntArray" | "LongArray" | "DoubleArray" | "BooleanArray" | "CharArray";
-export type NodeName = "ListNode" | "TreeNode";
+export type NodeName = "ListNode" | "TreeNode" | "DoublyListNode";
 
 export type KType =
   | { kind: "scalar"; name: ScalarName }
@@ -10,6 +10,7 @@ export type KType =
   | { kind: "node"; name: NodeName };
 
 const SCALARS: readonly string[] = ["Int", "Long", "Double", "Boolean", "Char", "String"];
+const NODES: readonly string[] = ["ListNode", "TreeNode", "DoublyListNode"];
 
 const PRIM_ARRAY_ELEMENTS: Record<PrimArrayName, ScalarName> = {
   IntArray: "Int",
@@ -52,10 +53,10 @@ export function parseType(text: string): KType {
       expect(">");
       return { kind: name === "List" ? "list" : "array", of };
     }
-    if (name === "ListNode" || name === "TreeNode") {
+    if (NODES.includes(name)) {
       if (src[pos] !== "?") fail(`write "${name}?" (nullable), as LeetCode does`);
       pos++;
-      return { kind: "node", name };
+      return { kind: "node", name: name as NodeName };
     }
     if (SCALARS.includes(name)) return { kind: "scalar", name: name as ScalarName };
     if (Object.hasOwn(PRIM_ARRAY_ELEMENTS, name)) return { kind: "primArray", name: name as PrimArrayName };

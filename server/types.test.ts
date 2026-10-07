@@ -25,6 +25,7 @@ describe("parseType", () => {
 
   it("parses nullable nodes, including inside collections", () => {
     expect(parseType("TreeNode?")).toEqual({ kind: "node", name: "TreeNode" });
+    expect(parseType("DoublyListNode?")).toEqual({ kind: "node", name: "DoublyListNode" });
     expect(parseType("Array<ListNode?>")).toEqual({
       kind: "array",
       of: { kind: "node", name: "ListNode" },
@@ -33,6 +34,7 @@ describe("parseType", () => {
 
   it("rejects non-nullable nodes", () => {
     expect(() => parseType("ListNode")).toThrow(/ListNode\?/);
+    expect(() => parseType("DoublyListNode")).toThrow(/DoublyListNode\?/);
   });
 
   it("rejects unknown types and junk", () => {
@@ -46,7 +48,7 @@ describe("parseType", () => {
 
 describe("formatType", () => {
   it("round-trips through parseType", () => {
-    for (const text of ["Int", "IntArray", "List<List<String>>", "Array<CharArray>", "ListNode?", "Array<TreeNode?>"]) {
+    for (const text of ["Int", "IntArray", "List<List<String>>", "Array<CharArray>", "ListNode?", "Array<TreeNode?>", "DoublyListNode?"]) {
       expect(formatType(parseType(text))).toBe(text);
     }
   });
@@ -63,5 +65,8 @@ describe("helpers", () => {
     expect(mentionsNode(parseType("List<Array<ListNode?>>"), "ListNode")).toBe(true);
     expect(mentionsNode(parseType("List<Array<ListNode?>>"), "TreeNode")).toBe(false);
     expect(mentionsNode(parseType("Int"), "TreeNode")).toBe(false);
+    expect(mentionsNode(parseType("DoublyListNode?"), "DoublyListNode")).toBe(true);
+    expect(mentionsNode(parseType("DoublyListNode?"), "ListNode")).toBe(false);
+    expect(mentionsNode(parseType("ListNode?"), "DoublyListNode")).toBe(false);
   });
 });

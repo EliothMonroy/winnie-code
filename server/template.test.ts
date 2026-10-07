@@ -37,6 +37,23 @@ describe("generateTemplate", () => {
     expect(text.indexOf("ListNode(5)")).toBeLessThan(text.indexOf("TreeNode(5)"));
   });
 
+  it("adds the DoublyListNode definition comment, and only that one, for a doubly linked signature", () => {
+    const text = generateTemplate(method("reverse", [["head", "DoublyListNode?"]], "DoublyListNode?"));
+    expect(text.startsWith("/**\n * Example:\n * var di = DoublyListNode(5)")).toBe(true);
+    expect(text).toContain(" * Definition for doubly-linked list.");
+    expect(text).toContain(" * class DoublyListNode(var value: Int) {");
+    expect(text).toContain(" *     var prev: DoublyListNode? = null");
+    expect(text).toContain(" *     var next: DoublyListNode? = null");
+    expect(text).not.toContain("singly-linked list");
+    expect(text).not.toContain("binary tree");
+    expect(text).toContain("fun reverse(head: DoublyListNode?): DoublyListNode? {");
+  });
+
+  it("does not add the DoublyListNode comment to a ListNode signature", () => {
+    const text = generateTemplate(method("reverseList", [["head", "ListNode?"]], "ListNode?"));
+    expect(text).not.toContain("DoublyListNode");
+  });
+
   it("includes only the tree doc block for a TreeNode-only signature", () => {
     const text = generateTemplate(method("invertTree", [["root", "TreeNode?"]], "TreeNode?"));
     expect(text).toContain(" * Definition for a binary tree node.");
