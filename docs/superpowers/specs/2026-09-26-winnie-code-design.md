@@ -121,6 +121,14 @@ class ListNode(var value: Int) { var next: ListNode? = null }
 class TreeNode(var value: Int) { var left: TreeNode? = null; var right: TreeNode? = null }
 ```
 
+`DoublyListNode?` was added on 2026-10-07 for doubly linked list problems:
+
+```kotlin
+class DoublyListNode(var value: Int) { var prev: DoublyListNode? = null; var next: DoublyListNode? = null }
+```
+
+It uses the same literal notation as `ListNode?`. Inputs are built with `prev` and `next` both wired. A returned list is serialized by walking `next`, and its `prev` pointers are verified on the way (head's `prev` is `null`, every other node's `prev` is the node before it); a violation fails the case as a runtime error with a "Broken doubly linked list" message.
+
 ### Adding a problem (workflow)
 
 The user pastes a problem into a Claude session. Claude then:

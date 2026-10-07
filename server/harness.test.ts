@@ -41,6 +41,7 @@ describe("decodeExpr", () => {
 
   it("decodes nodes", () => {
     expect(decodeExpr(parseType("ListNode?"), "l")).toBe("WinnieIO.listNode(l)");
+    expect(decodeExpr(parseType("DoublyListNode?"), "l")).toBe("WinnieIO.doublyListNode(l)");
     expect(decodeExpr(parseType("Array<TreeNode?>"), "l")).toBe(
       "WinnieIO.items(l).map { x1 -> WinnieIO.treeNode(x1) }.toTypedArray()",
     );
@@ -52,6 +53,7 @@ describe("encodeExpr", () => {
     expect(encodeExpr(parseType("Double"), "v")).toBe("WinnieIO.encDouble(v)");
     expect(encodeExpr(parseType("Char"), "v")).toBe("WinnieIO.encChar(v)");
     expect(encodeExpr(parseType("TreeNode?"), "v")).toBe("WinnieIO.encTreeNode(v)");
+    expect(encodeExpr(parseType("DoublyListNode?"), "v")).toBe("WinnieIO.encDoublyListNode(v)");
   });
 
   it("encodes collections recursively", () => {

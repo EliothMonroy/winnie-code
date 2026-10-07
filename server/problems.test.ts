@@ -114,6 +114,7 @@ describe("loadProblem / listProblems", () => {
       "chunk-words",
       "first-chars",
       "invert-tree",
+      "reverse-doubly-list",
       "reverse-list",
       "sum-array",
     ]);

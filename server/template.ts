@@ -31,6 +31,19 @@ const LIST_NODE_DOC = [
   " */",
 ].join("\n");
 
+const DOUBLY_LIST_NODE_DOC = [
+  "/**",
+  " * Example:",
+  " * var di = DoublyListNode(5)",
+  " * var v = di.value",
+  " * Definition for doubly-linked list.",
+  " * class DoublyListNode(var value: Int) {",
+  " *     var prev: DoublyListNode? = null",
+  " *     var next: DoublyListNode? = null",
+  " * }",
+  " */",
+].join("\n");
+
 const TREE_NODE_DOC = [
   "/**",
   " * Example:",
@@ -49,6 +62,7 @@ export function generateTemplate(method: Method): string {
   const types = [...method.params.map((p) => p.type), method.returns];
   const docs: string[] = [];
   if (types.some((t) => mentionsNode(t, "ListNode"))) docs.push(LIST_NODE_DOC);
+  if (types.some((t) => mentionsNode(t, "DoublyListNode"))) docs.push(DOUBLY_LIST_NODE_DOC);
   if (types.some((t) => mentionsNode(t, "TreeNode"))) docs.push(TREE_NODE_DOC);
 
   const body = [
