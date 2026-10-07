@@ -1,0 +1,20 @@
+{
+  "title": "Reverse a Doubly Linked List",
+  "difficulty": "Easy",
+  "method": {
+    "name": "reverse",
+    "params": [{ "name": "head", "type": "DoublyListNode?" }],
+    "returns": "DoublyListNode?"
+  },
+  "tests": [
+    { "input": ["[1,2,3,4,5]"], "expected": "[5,4,3,2,1]" },
+    { "input": ["[5]"], "expected": "[5]" },
+    { "input": ["[]"], "expected": "[]" },
+    { "input": ["[1,2]"], "expected": "[2,1]" },
+    { "input": ["[1,2,3]"], "expected": "[3,2,1]" },
+    { "input": ["[7,7,7]"], "expected": "[7,7,7]" },
+    { "input": ["[-1,0,1]"], "expected": "[1,0,-1]" },
+    { "input": ["[10,20,30,40,50,60,70,80,90,100]"], "expected": "[100,90,80,70,60,50,40,30,20,10]" },
+    { "input": ["[-2147483648,2147483647]"], "expected": "[2147483647,-2147483648]" }
+  ]
+}
