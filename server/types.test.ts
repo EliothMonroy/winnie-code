@@ -32,6 +32,27 @@ describe("parseType", () => {
     });
   });
 
+  it("parses hash maps, including nested value types", () => {
+    expect(parseType("HashMap<Int, Int>")).toEqual({
+      kind: "map",
+      key: { kind: "scalar", name: "Int" },
+      value: { kind: "scalar", name: "Int" },
+    });
+    expect(parseType("HashMap<String,List<Int>>")).toEqual({
+      kind: "map",
+      key: { kind: "scalar", name: "String" },
+      value: { kind: "list", of: { kind: "scalar", name: "Int" } },
+    });
+  });
+
+  it("rejects hash maps with unsupported keys or a missing value type", () => {
+    expect(() => parseType("HashMap<Double, Int>")).toThrow(/HashMap keys must be Int, Long, String, Char or Boolean/);
+    expect(() => parseType("HashMap<IntArray, Int>")).toThrow(/HashMap keys must be/);
+    expect(() => parseType("HashMap<ListNode?, Int>")).toThrow(/HashMap keys must be/);
+    expect(() => parseType("HashMap<Int>")).toThrow(/expected ","/);
+    expect(() => parseType("Map<Int, Int>")).toThrow(/unknown type "Map"/);
+  });
+
   it("rejects non-nullable nodes", () => {
     expect(() => parseType("ListNode")).toThrow(/ListNode\?/);
     expect(() => parseType("DoublyListNode")).toThrow(/DoublyListNode\?/);
@@ -48,7 +69,7 @@ describe("parseType", () => {
 
 describe("formatType", () => {
   it("round-trips through parseType", () => {
-    for (const text of ["Int", "IntArray", "List<List<String>>", "Array<CharArray>", "ListNode?", "Array<TreeNode?>", "DoublyListNode?"]) {
+    for (const text of ["Int", "IntArray", "List<List<String>>", "Array<CharArray>", "ListNode?", "Array<TreeNode?>", "DoublyListNode?", "HashMap<Int, Int>", "HashMap<String, List<Int>>"]) {
       expect(formatType(parseType(text))).toBe(text);
     }
   });
@@ -68,5 +89,7 @@ describe("helpers", () => {
     expect(mentionsNode(parseType("DoublyListNode?"), "DoublyListNode")).toBe(true);
     expect(mentionsNode(parseType("DoublyListNode?"), "ListNode")).toBe(false);
     expect(mentionsNode(parseType("ListNode?"), "DoublyListNode")).toBe(false);
+    expect(mentionsNode(parseType("HashMap<Int, ListNode?>"), "ListNode")).toBe(true);
+    expect(mentionsNode(parseType("HashMap<Int, Int>"), "ListNode")).toBe(false);
   });
 });

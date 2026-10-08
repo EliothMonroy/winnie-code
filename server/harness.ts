@@ -51,6 +51,8 @@ export function decodeExpr(t: KType, lit: string, depth = 1): string {
       return `${IO}.items(${lit}).map { ${x} -> ${decodeExpr(t.of, x, depth + 1)} }.toTypedArray()`;
     case "list":
       return `${IO}.items(${lit}).map { ${x} -> ${decodeExpr(t.of, x, depth + 1)} }`;
+    case "map":
+      return `${IO}.hashMap(${lit}, { ${x} -> ${decodeExpr(t.key, x, depth + 1)} }, { ${x} -> ${decodeExpr(t.value, x, depth + 1)} })`;
   }
 }
 
@@ -69,6 +71,8 @@ export function encodeExpr(t: KType, value: string, depth = 1): string {
     case "array":
     case "list":
       return `${IO}.encSeq(${value}.map { ${y} -> ${encodeExpr(t.of, y, depth + 1)} })`;
+    case "map":
+      return `${IO}.encMap(${value}, { ${y} -> ${encodeExpr(t.key, y, depth + 1)} }, { ${y} -> ${encodeExpr(t.value, y, depth + 1)} })`;
   }
 }
 

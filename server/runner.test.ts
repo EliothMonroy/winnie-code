@@ -217,6 +217,30 @@ describe.concurrent("runSolution", () => {
     expect(res.cases[0].error).toContain("Broken doubly linked list: the head (value 5) must have prev = null");
   });
 
+  it("handles HashMap results regardless of entry order, and HashMap params", async () => {
+    const counting = [
+      "class Solution {",
+      "    fun count(nums: IntArray): HashMap<Int, Int> {",
+      "        val counts = HashMap<Int, Int>()",
+      "        for (n in nums) counts[n] = (counts[n] ?: 0) + 1",
+      "        return counts",
+      "    }",
+      "}",
+    ].join("\n");
+    const ok = expectRan(await runSolution(tc, await fixture("count-values"), counting));
+    expect(ok.passed).toBe(3);
+    // Output is shown sorted by key even though the expected literal lists 5 first.
+    expect(ok.cases[1]).toMatchObject({ output: "{1: 1, 5: 2}", expected: "{5: 2, 1: 1}" });
+    expect(ok.cases[2]).toMatchObject({ output: "{}" });
+
+    const wrong = "class Solution { fun count(nums: IntArray): HashMap<Int, Int> = hashMapOf(9 to 9, -1 to 1) }";
+    const bad = expectRan(await runSolution(tc, await fixture("count-values"), wrong));
+    expect(bad.cases[0]).toMatchObject({ verdict: "wrong_answer", output: "{-1: 1, 9: 9}" });
+
+    const lookup = "class Solution { fun lookup(ages: HashMap<String, Int>, name: String): Int = ages[name] ?: -1 }";
+    expect(expectRan(await runSolution(tc, await fixture("map-lookup"), lookup)).passed).toBe(3);
+  });
+
   it("handles nested lists with escaped strings", async () => {
     const code = "class Solution { fun chunk(words: List<String>, size: Int): List<List<String>> = words.chunked(size) }";
     const res = expectRan(await runSolution(tc, await fixture("chunk-words"), code));
@@ -270,7 +294,7 @@ describe.concurrent("runSolution", () => {
 
 describe.concurrent("checkProblemLiterals", () => {
   it("accepts valid fixtures", async () => {
-    for (const slug of ["sum-array", "reverse-list", "reverse-doubly-list", "invert-tree", "chunk-words", "average", "first-chars"]) {
+    for (const slug of ["sum-array", "reverse-list", "reverse-doubly-list", "invert-tree", "chunk-words", "average", "first-chars", "count-values", "map-lookup"]) {
       expect(await checkProblemLiterals(tc, await fixture(slug)), slug).toEqual([]);
     }
   });

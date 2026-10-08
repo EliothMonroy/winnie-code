@@ -1,0 +1,14 @@
+{
+  "title": "Map Lookup",
+  "difficulty": "Easy",
+  "method": {
+    "name": "lookup",
+    "params": [{ "name": "ages", "type": "HashMap<String, Int>" }, { "name": "name", "type": "String" }],
+    "returns": "Int"
+  },
+  "tests": [
+    { "input": ["{\"ana\": 30, \"bob\": 25}", "\"bob\""], "expected": "25" },
+    { "input": ["{\"ana\": 30}", "\"zoe\""], "expected": "-1" },
+    { "input": ["{}", "\"ana\""], "expected": "-1" }
+  ]
+}

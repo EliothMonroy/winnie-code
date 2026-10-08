@@ -81,6 +81,49 @@ fun main() {
     dCyclic.next = dCyclic
     check("doubly list cycle", errorOf { WinnieIO.encDoublyListNode(dCyclic) }, "The returned doubly linked list contains a cycle")
 
+    // Hash maps
+    val intMap = WinnieIO.hashMap(lit("{3: 30, 1: 10, 2: 20}"), { WinnieIO.int(it) }, { WinnieIO.int(it) })
+    check("map decodes to a HashMap", intMap, hashMapOf(1 to 10, 2 to 20, 3 to 30))
+    check("map encodes sorted by key", WinnieIO.encMap(intMap, { WinnieIO.encInt(it) }, { WinnieIO.encInt(it) }), "{1: 10, 2: 20, 3: 30}")
+    check(
+        "map key order is numeric, not textual",
+        WinnieIO.encMap(hashMapOf(10 to 1, 9 to 1, -2 to 1), { WinnieIO.encInt(it) }, { WinnieIO.encInt(it) }),
+        "{-2: 1, 9: 1, 10: 1}",
+    )
+    check(
+        "map with string keys",
+        WinnieIO.encMap(
+            WinnieIO.hashMap(lit("{\"b\": 2, \"a\": 1}"), { WinnieIO.str(it) }, { WinnieIO.int(it) }),
+            { WinnieIO.encStr(it) },
+            { WinnieIO.encInt(it) },
+        ),
+        "{\"a\": 1, \"b\": 2}",
+    )
+    check(
+        "map with list values",
+        WinnieIO.encMap(
+            WinnieIO.hashMap(lit("{2:[3,4],1:[]}"), { WinnieIO.int(it) }, { v -> WinnieIO.items(v).map { WinnieIO.int(it) } }),
+            { WinnieIO.encInt(it) },
+            { v -> WinnieIO.encSeq(v.map { WinnieIO.encInt(it) }) },
+        ),
+        "{1: [], 2: [3,4]}",
+    )
+    check("empty map decodes", WinnieIO.hashMap(lit("{}"), { WinnieIO.int(it) }, { WinnieIO.int(it) }), HashMap<Int, Int>())
+    check("empty map encodes", WinnieIO.encMap(HashMap<Int, Int>(), { WinnieIO.encInt(it) }, { WinnieIO.encInt(it) }), "{}")
+    check("map render", WinnieIO.render(lit("{ 1 : \"x\" , 2:[true] }")), "{1: \"x\", 2: [true]}")
+    check(
+        "map duplicate key",
+        errorOf { WinnieIO.hashMap(lit("{1: 1, 1: 2}"), { WinnieIO.int(it) }, { WinnieIO.int(it) }) },
+        "Duplicate map key 1",
+    )
+    check(
+        "map type mismatch",
+        errorOf { WinnieIO.hashMap(lit("[1,2]"), { WinnieIO.int(it) }, { WinnieIO.int(it) }) },
+        "Expected a map but got [1,2]",
+    )
+    check("map missing colon", errorOf { lit("{1 2}") } != null, true)
+    check("map unterminated", errorOf { lit("{1: 2") } != null, true)
+
     // Trees
     for (t in listOf("[3,9,20,null,null,15,7]", "[1,null,2,3]", "[1]", "[5,4,8,11,null,13,4,7,2,null,null,null,1]")) {
         check("tree $t", tree(t), t)

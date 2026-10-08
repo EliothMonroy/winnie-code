@@ -11,6 +11,19 @@ object WinnieIO {
 
     fun items(l: WinnieLit): List<WinnieLit> = (l as? WinnieLit.Arr)?.items ?: mismatch("an array", l)
 
+    fun entries(l: WinnieLit): List<Pair<WinnieLit, WinnieLit>> = (l as? WinnieLit.Obj)?.entries ?: mismatch("a map", l)
+
+    /** Builds a HashMap from a `{key: value}` literal. Duplicate keys are rejected. */
+    fun <K, V> hashMap(l: WinnieLit, key: (WinnieLit) -> K, value: (WinnieLit) -> V): HashMap<K, V> {
+        val map = HashMap<K, V>()
+        for ((k, v) in entries(l)) {
+            val decodedKey = key(k)
+            if (map.containsKey(decodedKey)) throw IllegalArgumentException("Duplicate map key ${render(k)}")
+            map[decodedKey] = value(v)
+        }
+        return map
+    }
+
     fun int(l: WinnieLit): Int = number(l, "an Int").toIntOrNull() ?: mismatch("an Int", l)
 
     fun long(l: WinnieLit): Long = number(l, "a Long").toLongOrNull() ?: mismatch("a Long", l)
@@ -91,6 +104,13 @@ object WinnieIO {
     fun encStr(v: String): String = quote(v)
 
     fun encSeq(items: List<String>): String = items.joinToString(",", "[", "]")
+
+    /**
+     * Serializes a map as `{k1: v1, k2: v2}` with entries sorted by key, so two maps with the same
+     * contents always produce the same text no matter what order a HashMap iterates in.
+     */
+    fun <K : Comparable<K>, V> encMap(map: Map<K, V>, key: (K) -> String, value: (V) -> String): String =
+        map.entries.sortedBy { it.key }.joinToString(", ", "{", "}") { "${key(it.key)}: ${value(it.value)}" }
 
     fun encListNode(head: ListNode?): String {
         val seen = Collections.newSetFromMap(IdentityHashMap<ListNode, Boolean>())
@@ -181,6 +201,7 @@ object WinnieIO {
         is WinnieLit.Bool -> l.value.toString()
         WinnieLit.Null -> "null"
         is WinnieLit.Arr -> encSeq(l.items.map { render(it) })
+        is WinnieLit.Obj -> l.entries.joinToString(", ", "{", "}") { "${render(it.first)}: ${render(it.second)}" }
     }
 
     private fun number(l: WinnieLit, what: String): String = (l as? WinnieLit.Num)?.text ?: mismatch(what, l)

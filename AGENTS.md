@@ -39,13 +39,15 @@ Local LeetCode-style judge for Kotlin. The user pastes problems into a Claude se
      - scalars: `Int`, `Long`, `Double`, `Boolean`, `Char`, `String`;
      - primitive arrays: `IntArray`, `LongArray`, `DoubleArray`, `BooleanArray`, `CharArray`;
      - `Array<T>` and `List<T>` (nestable);
+     - `HashMap<K, V>`: the built-in `java.util.HashMap`. Keys are `Int`, `Long`, `String`, `Char` or `Boolean`; values are any supported type. There is no `Map<K, V>`: write `HashMap`;
      - `ListNode?`, `DoublyListNode?` and `TreeNode?` (always nullable; they can also appear inside arrays and lists). Their value field is `value`, not LeetCode's `` `val` ``, so reference solutions must use `node.value`.
      - `DoublyListNode` has `prev` and `next`. Inputs arrive with both wired. Returned lists are read by walking `next`, and every `prev` is checked: a wrong `prev` fails the case with a "Broken doubly linked list" runtime error.
    - Literals use LeetCode notation:
      - strings and chars are double-quoted (`"a"`), and inside JSON the quotes are escaped;
      - trees are level-order with `null` holes, e.g. `[3,9,20,null,null,15,7]`;
      - an empty list or tree is `[]`;
-     - a doubly linked list uses the same notation as a singly linked one: `[1,2,3]` means `1 <-> 2 <-> 3`.
+     - a doubly linked list uses the same notation as a singly linked one: `[1,2,3]` means `1 <-> 2 <-> 3`;
+     - a hash map is `{1: 1, 2: 2}` (string keys quoted: `{"a": 1}`), and `{}` when empty. Entry order never matters: both the answer and the expected value are sorted by key before comparing, and outputs are displayed sorted. Write `expected` sorted by key so it reads the same as the displayed output.
    - Tests: every example from the statement plus 3–6 extra edge cases (minimum sizes, negatives, duplicates, boundaries from the constraints).
    - Comparison is exact after normalization. If a problem accepts several valid answers (any order, any valid index pair, etc.), choose test inputs whose answer is unique, or tell the user it cannot be judged exactly. Design problems (e.g. `LRUCache`) are not supported yet. Problems whose LeetCode signature returns `Unit` / modifies the input in place (e.g. Rotate Image, Sort Colors, Move Zeroes) are also not supported yet - tell the user rather than inventing a non-LeetCode signature that returns a value.
 4. **Verify**:

@@ -7,10 +7,13 @@ export type KType =
   | { kind: "primArray"; name: PrimArrayName }
   | { kind: "array"; of: KType }
   | { kind: "list"; of: KType }
-  | { kind: "node"; name: NodeName };
+  | { kind: "node"; name: NodeName }
+  | { kind: "map"; key: KType; value: KType };
 
 const SCALARS: readonly string[] = ["Int", "Long", "Double", "Boolean", "Char", "String"];
 const NODES: readonly string[] = ["ListNode", "TreeNode", "DoublyListNode"];
+/** Scalars that can be HashMap keys: they have a natural order, so maps can be compared after sorting by key. */
+const MAP_KEYS: readonly string[] = ["Int", "Long", "String", "Char", "Boolean"];
 
 const PRIM_ARRAY_ELEMENTS: Record<PrimArrayName, ScalarName> = {
   IntArray: "Int",
@@ -53,6 +56,15 @@ export function parseType(text: string): KType {
       expect(">");
       return { kind: name === "List" ? "list" : "array", of };
     }
+    if (name === "HashMap") {
+      expect("<");
+      const key = type();
+      if (key.kind !== "scalar" || !MAP_KEYS.includes(key.name)) fail("HashMap keys must be Int, Long, String, Char or Boolean");
+      expect(",");
+      const value = type();
+      expect(">");
+      return { kind: "map", key, value };
+    }
     if (NODES.includes(name)) {
       if (src[pos] !== "?") fail(`write "${name}?" (nullable), as LeetCode does`);
       pos++;
@@ -79,11 +91,14 @@ export function formatType(t: KType): string {
       return `Array<${formatType(t.of)}>`;
     case "list":
       return `List<${formatType(t.of)}>`;
+    case "map":
+      return `HashMap<${formatType(t.key)}, ${formatType(t.value)}>`;
   }
 }
 
 export function mentionsNode(t: KType, name: NodeName): boolean {
   if (t.kind === "node") return t.name === name;
   if (t.kind === "array" || t.kind === "list") return mentionsNode(t.of, name);
+  if (t.kind === "map") return mentionsNode(t.key, name) || mentionsNode(t.value, name);
   return false;
 }

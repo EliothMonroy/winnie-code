@@ -54,6 +54,12 @@ describe("generateTemplate", () => {
     expect(text).not.toContain("DoublyListNode");
   });
 
+  it("renders HashMap types in the signature without any definition comment", () => {
+    expect(generateTemplate(method("countFrequencies", [["arr", "IntArray"]], "HashMap<Int, Int>"))).toBe(
+      ["class Solution {", "    fun countFrequencies(arr: IntArray): HashMap<Int, Int> {", "        ", "    }", "}", ""].join("\n"),
+    );
+  });
+
   it("includes only the tree doc block for a TreeNode-only signature", () => {
     const text = generateTemplate(method("invertTree", [["root", "TreeNode?"]], "TreeNode?"));
     expect(text).toContain(" * Definition for a binary tree node.");
