@@ -103,6 +103,8 @@ Lists: `List<T>` for any supported `T`, nested to any depth (for example
 
 Structures: `ListNode?` and `TreeNode?`.
 
+Maps (added 2026-10-08): `HashMap<K, V>`, the built-in `java.util.HashMap`, where `K` is `Int`, `Long`, `String`, `Char` or `Boolean` and `V` is any supported type. Literals are written `{1: 1, 2: 2}` (`{}` when empty). A map is serialized with its entries sorted by key, so comparison does not depend on iteration order.
+
 Literal notation follows LeetCode:
 
 - Numbers are written as-is.

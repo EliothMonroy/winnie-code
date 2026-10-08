@@ -1,0 +1,10 @@
+{
+  "title": "Count Values",
+  "difficulty": "Easy",
+  "method": { "name": "count", "params": [{ "name": "nums", "type": "IntArray" }], "returns": "HashMap<Int, Int>" },
+  "tests": [
+    { "input": ["[1,2,2,3,3,3]"], "expected": "{1: 1, 2: 2, 3: 3}" },
+    { "input": ["[5,5,1]"], "expected": "{5: 2, 1: 1}" },
+    { "input": ["[]"], "expected": "{}" }
+  ]
+}

@@ -48,6 +48,23 @@ describe("decodeExpr", () => {
   });
 });
 
+describe("hash maps", () => {
+  it("decodes with separate key and value lambdas", () => {
+    expect(decodeExpr(parseType("HashMap<Int, Int>"), "l")).toBe(
+      "WinnieIO.hashMap(l, { x1 -> WinnieIO.int(x1) }, { x1 -> WinnieIO.int(x1) })",
+    );
+    expect(decodeExpr(parseType("HashMap<String, List<Int>>"), "l")).toBe(
+      "WinnieIO.hashMap(l, { x1 -> WinnieIO.str(x1) }, { x1 -> WinnieIO.items(x1).map { x2 -> WinnieIO.int(x2) } })",
+    );
+  });
+
+  it("encodes with separate key and value lambdas", () => {
+    expect(encodeExpr(parseType("HashMap<Int, Int>"), "v")).toBe(
+      "WinnieIO.encMap(v, { y1 -> WinnieIO.encInt(y1) }, { y1 -> WinnieIO.encInt(y1) })",
+    );
+  });
+});
+
 describe("encodeExpr", () => {
   it("encodes scalars and nodes", () => {
     expect(encodeExpr(parseType("Double"), "v")).toBe("WinnieIO.encDouble(v)");

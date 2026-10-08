@@ -1,10 +1,11 @@
-/** A value written in LeetCode literal notation: numbers, "strings", true/false, null and [arrays]. */
+/** A value written in LeetCode literal notation: numbers, "strings", true/false, null, [arrays] and {key: value} maps. */
 sealed class WinnieLit {
     data class Num(val text: String) : WinnieLit()
     data class Str(val value: String) : WinnieLit()
     data class Bool(val value: Boolean) : WinnieLit()
     data object Null : WinnieLit()
     data class Arr(val items: List<WinnieLit>) : WinnieLit()
+    data class Obj(val entries: List<Pair<WinnieLit, WinnieLit>>) : WinnieLit()
 }
 
 class WinnieLitParser private constructor(private val src: String) {
@@ -33,6 +34,7 @@ class WinnieLitParser private constructor(private val src: String) {
         val c = src[pos]
         return when {
             c == '[' -> array()
+            c == '{' -> map()
             c == '"' -> WinnieLit.Str(string())
             c == '-' || c.isDigit() -> number()
             src.startsWith("true", pos) -> { pos += 4; WinnieLit.Bool(true) }
@@ -62,6 +64,35 @@ class WinnieLitParser private constructor(private val src: String) {
                     return WinnieLit.Arr(items)
                 }
                 else -> fail("expected ',' or ']'")
+            }
+        }
+    }
+
+    private fun map(): WinnieLit {
+        pos++ // {
+        val entries = ArrayList<Pair<WinnieLit, WinnieLit>>()
+        skipWhitespace()
+        if (pos < src.length && src[pos] == '}') {
+            pos++
+            return WinnieLit.Obj(entries)
+        }
+        while (true) {
+            skipWhitespace()
+            val key = value()
+            skipWhitespace()
+            if (pos >= src.length || src[pos] != ':') fail("expected ':' after a map key")
+            pos++
+            skipWhitespace()
+            entries.add(key to value())
+            skipWhitespace()
+            if (pos >= src.length) fail("unterminated map")
+            when (src[pos]) {
+                ',' -> pos++
+                '}' -> {
+                    pos++
+                    return WinnieLit.Obj(entries)
+                }
+                else -> fail("expected ',' or '}'")
             }
         }
     }
