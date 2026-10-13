@@ -1,8 +1,8 @@
 Count the number of swaps needed to sort an array in ascending order using bubble sort. This problem builds on your understanding of the bubble sort algorithm by tracking how many swap operations are performed.
 
-Bubble sort repeatedly passes over the list comparing each pair of adjacent elements, and swaps a pair only when the left element is greater than the right one. Equal elements are never swapped.
+Bubble sort repeatedly passes over the array comparing each pair of adjacent elements, and swaps a pair only when the left element is greater than the right one. Equal elements are never swapped.
 
-Given a list of integers `arr`, return the total number of swaps performed.
+Given an array of integers `arr`, return the total number of swaps performed. You may sort `arr` in place: each test case gets its own array.
 
 **Example 1:**
 

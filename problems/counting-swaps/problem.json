@@ -3,7 +3,7 @@
   "difficulty": "Easy",
   "method": {
     "name": "countSwaps",
-    "params": [{ "name": "arr", "type": "List<Int>" }],
+    "params": [{ "name": "arr", "type": "IntArray" }],
     "returns": "Int"
   },
   "tests": [
