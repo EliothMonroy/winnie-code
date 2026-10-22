@@ -14,6 +14,7 @@ Local LeetCode-style judge for Kotlin. The user pastes problems into a Claude se
 
 ## Adding a problem (when the user pastes one)
 
+0. **Check LeetCode first. Ask before adding a LeetCode problem.** Before creating any files, check whether the pasted problem is a LeetCode problem or a close variant of one: the same task, even if the title, signature, tie-breaking or return type differ (e.g. returning a new array where LeetCode modifies in place). If it is, tell the user which one (number and title, e.g. "#451 Sort Characters By Frequency") and how theirs differs, then **ask whether they're sure they want to add it**. Create files only after they confirm. If you're unsure whether it matches, say so and ask anyway.
 1. **Slug**: kebab-case, preferably LeetCode's URL slug (e.g. `two-sum`). Folder: `problems/<slug>/`.
 2. **`description.md`**: the statement in Markdown. Include:
    - the description (inline code for identifiers);
