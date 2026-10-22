@@ -1,0 +1,22 @@
+{
+  "title": "Sort Characters by Frequency",
+  "difficulty": "Medium",
+  "method": {
+    "name": "frequencySort",
+    "params": [{ "name": "s", "type": "String" }],
+    "returns": "String"
+  },
+  "tests": [
+    { "input": ["\"tree\""], "expected": "\"eert\"" },
+    { "input": ["\"cccaaa\""], "expected": "\"aaaccc\"" },
+    { "input": ["\"Aabb\""], "expected": "\"bbAa\"" },
+    { "input": ["\"\""], "expected": "\"\"" },
+    { "input": ["\"a\""], "expected": "\"a\"" },
+    { "input": ["\"ba\""], "expected": "\"ab\"" },
+    { "input": ["\"xyzzyz\""], "expected": "\"zzzyyx\"" },
+    { "input": ["\"AaBbAa\""], "expected": "\"AAaaBb\"" },
+    { "input": ["\"a3b2c1aa\""], "expected": "\"aaa123bc\"" },
+    { "input": ["\"hello world\""], "expected": "\"llloo dehrw\"" },
+    { "input": ["\"!!??..\""], "expected": "\"!!..??\"" }
+  ]
+}
